@@ -1,0 +1,96 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# =========================
+# Environment Variables
+# =========================
+.env
+
+# =========================
+# Jupyter Notebook
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# Build / Distribution
+# =========================
+build/
+dist/
+*.egg-info/
+
+# =========================
+# Cache
+# =========================
+.cache/
+.pytest_cache/
+.mypy_cache/
+
+# =========================
+# ML Model Files
+# =========================
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+
+# =========================
+# Generated Outputs
+# =========================
+outputs/*
+!outputs/.gitkeep
+
+# =========================
+# Large Datasets
+# =========================
+datasets/*.csv
+datasets/*.xlsx
+datasets/*.parquet
+
+# Keep sample small datasets if needed
+!datasets/sample.csv
+
+# =========================
+# Streamlit
+# =========================
+.streamlit/
+
+# =========================
+# Temporary Files
+# =========================
+temp/
+tmp/
+
+# =========================
+# Optional Docs To Ignore
+# Uncomment if unnecessary
+# =========================
+
+# BUILD_VERIFICATION.md
+# COMPLETION_CHECKLIST.md
+# FINAL_STATUS.txt

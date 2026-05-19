@@ -1,0 +1,250 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                        AUTODS-LLM SYSTEM ARCHITECTURE                           ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+
+                              🌐 CLIENT LAYER
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Web Browser / User Interface                   │
+    │              (Streamlit Frontend on port 8501)                    │
+    └────────────────┬────────────────────────────────────────────────┘
+                     │ HTTP/REST Requests
+                     ▼
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    🔌 API GATEWAY & ROUTER                       │
+    │                      (FastAPI on port 8000)                      │
+    │  - Request Validation (Pydantic)                                  │
+    │  - CORS Middleware                                                │
+    │  - Error Handling                                                 │
+    │  - Logging                                                        │
+    └────────────────┬────────────────────────────────────────────────┘
+                     │
+        ┌────────────┼────────────┬────────────┐
+        ▼            ▼            ▼            ▼
+    ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐
+    │ /upload│  │/predict│  │/recommend│/analyze│
+    └────────┘  └────────┘  └────────┘  └────────┘
+        │            │            │            │
+        └────────────┼────────────┼────────────┘
+                     ▼
+    ┌─────────────────────────────────────────────────────────────────┐
+    │              💼 BUSINESS LOGIC LAYER (Services)                  │
+    ├─────────────────────────────────────────────────────────────────┤
+    │                                                                   │
+    │  ┌──────────────────────────────────────────────────────────┐    │
+    │  │           MLService (Main Orchestrator)                   │    │
+    │  │  - Coordinates all ML operations                          │    │
+    │  │  - Manages uploaded files                                 │    │
+    │  │  - Routes to specific modules                             │    │
+    │  └──────────────────────────────────────────────────────────┘    │
+    │                          │                                        │
+    │        ┌─────────────────┼─────────────────┐                     │
+    │        ▼                 ▼                 ▼                     │
+    │  ┌─────────────┐  ┌────────────┐  ┌──────────────┐              │
+    │  │DataAnalyzer │  │TaskPredictor│ │PipelineRecog│              │
+    │  ├─────────────┤  ├────────────┤  ├──────────────┤              │
+    │  │• Analyze    │  │• Infer task │  │• Recommend  │              │
+    │  │  dataset    │  │  type      │  │  models     │              │
+    │  │• Extract    │  │• Confidence │  │• Suggest    │              │
+    │  │  features   │  │  scores    │  │  preprocessing          │
+    │  │• Compute    │  │• Keyword   │  │• Suggest    │              │
+    │  │  stats      │  │  analysis  │  │  metrics    │              │
+    │  └─────────────┘  └────────────┘  └──────────────┘              │
+    │                                                                   │
+    └─────────────────────────────────────────────────────────────────┘
+                             │
+                             ▼
+    ┌─────────────────────────────────────────────────────────────────┐
+    │              📊 DATA & MODELS LAYER                              │
+    ├─────────────────────────────────────────────────────────────────┤
+    │                                                                   │
+    │  ┌─────────────────────────────────────────────────────────┐    │
+    │  │           Knowledge Base (In-Memory)                     │    │
+    │  ├─────────────────────────────────────────────────────────┤    │
+    │  │                                                          │    │
+    │  │  MODEL CONFIGS:                                         │    │
+    │  │  • Classification: RF, XGBoost, LogReg               │    │
+    │  │  • Regression: XGBoost, RF, Linear                   │    │
+    │  │  • Clustering: K-Means, DBSCAN, Hierarchical        │    │
+    │  │  • NLP: BERT, TF-IDF+SVM, FastText                  │    │
+    │  │  • TimeSeries: LSTM, ARIMA, Prophet                 │    │
+    │  │                                                          │    │
+    │  │  PREPROCESSING STEPS:                                   │    │
+    │  │  • Imputation strategies                               │    │
+    │  │  • Encoding methods                                     │    │
+    │  │  • Scaling techniques                                   │    │
+    │  │  • Outlier handling                                     │    │
+    │  │                                                          │    │
+    │  │  EVALUATION METRICS:                                    │    │
+    │  │  • Classification: Accuracy, F1, ROC-AUC             │    │
+    │  │  • Regression: MAE, RMSE, R²                         │    │
+    │  │  • Clustering: Silhouette, Davies-Bouldin            │    │
+    │  │  • NLP: F1, Accuracy, Perplexity                     │    │
+    │  │  • TimeSeries: MAE, RMSE, MAPE, Direction           │    │
+    │  │                                                          │    │
+    │  └─────────────────────────────────────────────────────────┘    │
+    │                                                                   │
+    │  ┌─────────────────────────────────────────────────────────┐    │
+    │  │         Uploaded Datasets (Temporary Storage)           │    │
+    │  │  • CSV files                                             │    │
+    │  │  • Excel files                                           │    │
+    │  │  • Parquet files                                         │    │
+    │  └─────────────────────────────────────────────────────────┘    │
+    │                                                                   │
+    └─────────────────────────────────────────────────────────────────┘
+                             │
+                             ▼
+    ┌─────────────────────────────────────────────────────────────────┐
+    │              🔧 EXTERNAL LIBRARIES & FRAMEWORKS                  │
+    ├─────────────────────────────────────────────────────────────────┤
+    │                                                                   │
+    │  Data Processing:  Pandas, NumPy, SciPy                          │
+    │  ML Frameworks:    Scikit-learn, XGBoost, TensorFlow            │
+    │  NLP:             Transformers, NLTK, FastText                  │
+    │  Time Series:      Statsmodels, Prophet                          │
+    │  Utilities:        Requests, Python-dotenv, Logging             │
+    │                                                                   │
+    └─────────────────────────────────────────────────────────────────┘
+
+
+════════════════════════════════════════════════════════════════════════════════
+
+                            📊 DATA FLOW DIAGRAM
+
+    ┌──────────────┐
+    │ User Upload  │
+    │  Dataset     │
+    └──────┬───────┘
+           │
+           ▼
+    ┌──────────────────────┐
+    │ File Validation      │
+    │ • Type check         │
+    │ • Size check         │
+    └──────┬───────────────┘
+           │
+           ▼
+    ┌──────────────────────┐
+    │ Data Parsing         │
+    │ • Read CSV/Excel     │
+    │ • Create DataFrame   │
+    └──────┬───────────────┘
+           │
+           ▼
+    ┌──────────────────────────────────┐
+    │ Data Analysis                    │
+    │ • Count rows/cols                │
+    │ • Detect types                   │
+    │ • Find missing values            │
+    │ • Compute statistics             │
+    └──────┬───────────────────────────┘
+           │
+           ├─────────────────────┬──────────────────┐
+           ▼                     ▼                  ▼
+    ┌─────────────┐      ┌────────────┐   ┌──────────────┐
+    │ Store in    │      │ Analyze    │   │ Infer Task   │
+    │ Memory      │      │ Dataset    │   │ Type         │
+    └─────┬───────┘      └────────┬───┘   └──────┬───────┘
+          │                       │              │
+          │                       └──────┬───────┘
+          │                              │
+          └──────────────────┬───────────┘
+                             │
+                             ▼
+                    ┌────────────────────┐
+                    │ Task Predicted     │
+                    │ • Type             │
+                    │ • Confidence       │
+                    └────────┬───────────┘
+                             │
+                             ▼
+                    ┌────────────────────┐
+                    │ Generate Pipeline  │
+                    │ Recommendations    │
+                    │ • Models           │
+                    │ • Preprocessing    │
+                    │ • Metrics          │
+                    └────────┬───────────┘
+                             │
+                             ▼
+                    ┌────────────────────┐
+                    │ Return Results     │
+                    │ to Frontend        │
+                    └────────┬───────────┘
+                             │
+                             ▼
+                    ┌────────────────────┐
+                    │ Display in         │
+                    │ Dashboard          │
+                    └────────────────────┘
+
+
+════════════════════════════════════════════════════════════════════════════════
+
+                         🎯 RECOMMENDATION ENGINE LOGIC
+
+    Input: Dataset + Task Description
+       │
+       ├─ Parse Description
+       │  └─ Extract keywords for each task type
+       │     • classification: "classify", "category", "binary"
+       │     • regression: "predict value", "continuous"
+       │     • clustering: "cluster", "group", "segment"
+       │     • nlp: "text", "sentiment", "language"
+       │     • time_series: "forecast", "trend", "temporal"
+       │
+       ├─ Analyze Data Characteristics
+       │  ├─ Target variable analysis
+       │  │  ├─ Type (numeric, categorical)
+       │  │  └─ Distribution (balanced, imbalanced)
+       │  ├─ Feature analysis
+       │  │  ├─ Types (numeric, categorical, datetime)
+       │  │  └─ Quality (missing values, outliers)
+       │  └─ Dataset size assessment
+       │     ├─ Small (< 1K): Use simple models
+       │     ├─ Medium (1K-100K): Use ensemble
+       │     └─ Large (> 100K): Use scalable models
+       │
+       ├─ Calculate Confidence Scores
+       │  ├─ Description score (40% weight)
+       │  ├─ Data characteristics (60% weight)
+       │  └─ Normalize to 0-100% for each task
+       │
+       └─ Generate Recommendations
+          ├─ Select top-3 models for task type
+          ├─ Suggest preprocessing pipeline
+          ├─ Recommend evaluation metrics
+          └─ Add contextual notes
+
+
+════════════════════════════════════════════════════════════════════════════════
+
+                        🏗️ SCALABILITY ARCHITECTURE
+
+    Current (Single-machine):
+    ┌─────────────────────────────┐
+    │  Frontend (Streamlit)       │
+    │  Backend (FastAPI)          │
+    │  ML Services (In-memory)    │
+    └─────────────────────────────┘
+
+    Future (Cloud-native):
+    ┌────────────────────────────────────────────────────────┐
+    │         Load Balancer (Nginx)                           │
+    ├────────────────────────────────────────────────────────┤
+    │  Frontend Instances  │  Backend Instances  │  ML Workers │
+    │  (Multiple replicas) │  (Multiple instances) (GPU/TPU)  │
+    └────────────────────────────────────────────────────────┘
+         ▼
+    ┌──────────────────────┐
+    │  Message Queue       │
+    │  (RabbitMQ/Kafka)    │
+    └────────┬─────────────┘
+             ▼
+    ┌──────────────────────┐
+    │  Database            │
+    │  (PostgreSQL)        │
+    └──────────────────────┘
+
+
+════════════════════════════════════════════════════════════════════════════════
