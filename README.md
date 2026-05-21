@@ -1,4 +1,4 @@
-# AutoDS-LLM — AI Powered Automated Machine Learning Platform
+# AutoDS-LLM: Designing and Evaluating Adaptive Language Models for Evolving Data Science Workflows
 
 AutoDS-LLM is a futuristic AI-powered AutoML platform that automates the complete machine learning workflow from dataset upload to model training, evaluation, and prediction.
 
