@@ -1,0 +1,55 @@
+<div class="sidebar-content">
+  <!-- Brand Header -->
+  <div class="sidebar-brand" onclick="location.hash='#dashboard'">
+    <div class="brand-icon-wrapper">
+      <span class="brand-icon">⚡</span>
+    </div>
+    <div class="brand-text">
+      <h1>AutoDS</h1>
+      <p>ML Engine Studio</p>
+    </div>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="sidebar-nav">
+    <a href="#dashboard" class="nav-item active" data-page="dashboard">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      <span class="nav-label">Dashboard</span>
+    </a>
+    <a href="#upload" class="nav-item" data-page="upload">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="17 8 12 3 7 8"></polyline>
+        <line x1="12" y1="3" x2="12" y2="15"></line>
+      </svg>
+      <span class="nav-label">Upload & Train</span>
+    </a>
+    <a href="#metrics" class="nav-item" data-page="metrics">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"></line>
+        <line x1="12" y1="20" x2="12" y2="4"></line>
+        <line x1="6" y1="20" x2="6" y2="14"></line>
+      </svg>
+      <span class="nav-label">Evaluations</span>
+    </a>
+    <a href="#prediction" class="nav-item" data-page="prediction">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+      </svg>
+      <span class="nav-label">Prediction Studio</span>
+    </a>
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer">
+    <span class="status-dot animate-pulse" id="connection-status-dot"></span>
+    <span class="nav-label font-mono text-[10px] tracking-wider text-slate-400" id="connection-status-text">API ACTIVE</span>
+  </div>
+</div>

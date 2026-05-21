@@ -1,0 +1,130 @@
+<div class="space-y-6">
+  <!-- Metrics/Analytics Counters Grid -->
+  <div class="metrics-grid">
+    <!-- Dataset details card -->
+    <div class="glass-card neon-glow-cyan flex flex-col justify-between min-h-[140px] relative">
+      <div>
+        <div class="metric-label flex items-center gap-2">
+          <svg class="w-3.5 h-3.5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          Active Dataset
+        </div>
+        <div class="metric-value text-2xl truncate mt-1 text-slate-100 font-bold" id="dashboard-dataset-name">No dataset loaded</div>
+      </div>
+      <div class="metric-change text-slate-400 font-mono text-xs flex items-center gap-1.5 mt-2">
+        <span class="text-cyan-400 font-semibold" id="dashboard-row-count">-</span> rows <span class="text-slate-600">•</span> <span class="text-cyan-400 font-semibold" id="dashboard-col-count">-</span> columns
+      </div>
+      <span class="absolute top-4 right-4 text-cyan-400/20 font-bold text-3xl font-mono select-none">DATA</span>
+    </div>
+
+    <!-- Task Profiler Type Card -->
+    <div class="glass-card flex flex-col justify-between min-h-[140px] relative">
+      <div>
+        <div class="metric-label flex items-center gap-2">
+          <svg class="w-3.5 h-3.5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          Task Class
+        </div>
+        <div class="metric-value text-2xl mt-1 text-slate-100 font-bold capitalize" id="dashboard-task-type">-</div>
+      </div>
+      <div class="metric-change text-slate-400 font-mono text-xs mt-2">
+        Target Field: <span class="text-violet-400 font-semibold" id="dashboard-task-target">-</span>
+      </div>
+      <span class="absolute top-4 right-4 text-violet-400/20 font-bold text-3xl font-mono select-none">TASK</span>
+    </div>
+
+    <!-- Best Model Spotlight Card -->
+    <div class="glass-card flex flex-col justify-between min-h-[140px] relative">
+      <div>
+        <div class="metric-label flex items-center gap-2">
+          <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          Best Performer
+        </div>
+        <div class="metric-value text-lg mt-2 truncate text-emerald-400 font-bold" id="dashboard-best-model">-</div>
+      </div>
+      <div class="metric-change text-slate-400 font-mono text-xs mt-2">
+        Leaderboard: <span class="text-emerald-400 font-semibold" id="dashboard-model-count">0</span> models trained
+      </div>
+      <span class="absolute top-4 right-4 text-emerald-400/20 font-bold text-3xl font-mono select-none">BEST</span>
+    </div>
+
+    <!-- Job Progress Card -->
+    <div class="glass-card flex flex-col justify-between min-h-[140px] relative">
+      <div>
+        <div class="metric-label flex items-center gap-2">
+          <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+          System State
+        </div>
+        <div class="metric-value text-2xl mt-1 text-slate-100 font-bold uppercase tracking-wide font-mono" id="dashboard-train-state" style="font-size: 1.35rem">idle</div>
+      </div>
+      <div class="metric-change text-slate-400 font-mono text-xs mt-2">
+        Active Progress: <span class="text-amber-400 font-semibold" id="dashboard-train-progress">0%</span>
+      </div>
+      <span class="absolute top-4 right-4 text-amber-400/20 font-bold text-3xl font-mono select-none">RUN</span>
+    </div>
+  </div>
+
+  <!-- Performance Comparison Visualization & Workflow Links Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Chart Column (Takes 2 fractions on large screens) -->
+    <div class="glass-card lg:col-span-2">
+      <div class="card-header border-b border-white/5 pb-4 mb-4 flex justify-between items-center">
+        <div>
+          <h3 class="card-title text-base">Model Accuracy Comparison</h3>
+          <p class="card-subtitle text-xs">Evaluates scores generated during validation runs</p>
+        </div>
+        <div class="flex items-center gap-1.5 bg-slate-900/50 border border-white/10 px-2.5 py-1 rounded-md text-[10px] font-mono text-slate-400">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          LIVE LEADERBOARD
+        </div>
+      </div>
+      <div class="chart-container h-[260px]">
+        <canvas id="dashboard-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Quick Navigation Column -->
+    <div class="glass-card flex flex-col justify-between">
+      <div>
+        <div class="card-header border-b border-white/5 pb-4 mb-4">
+          <h3 class="card-title text-base">Quick Operations</h3>
+          <p class="card-subtitle text-xs font-mono">Control pipelines dynamically</p>
+        </div>
+        <div class="flex flex-col gap-3">
+          <!-- Button 1 -->
+          <button class="btn btn-primary justify-start w-full" data-page="upload">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Upload New Dataset
+          </button>
+          
+          <!-- Button 2 -->
+          <button class="btn btn-secondary justify-start w-full" data-page="metrics">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            Model Evaluations
+          </button>
+          
+          <!-- Button 3 -->
+          <button class="btn btn-accent justify-start w-full" data-page="prediction">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            </svg>
+            Prediction Studio
+          </button>
+        </div>
+      </div>
+      
+      <!-- System footer info -->
+      <div class="mt-6 border-t border-white/5 pt-4 text-[10px] text-slate-500 font-mono flex items-center justify-between">
+        <span>PLATFORM STATUS: NOMINAL</span>
+        <span>V1.0.0</span>
+      </div>
+    </div>
+  </div>
+</div>

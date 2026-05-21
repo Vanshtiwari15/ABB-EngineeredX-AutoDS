@@ -1,0 +1,257 @@
+<div class="space-y-6">
+  <!-- Interactive Guided Stepper Map -->
+  <div class="glass-card mb-6">
+    <div class="stepper-container">
+      <div class="stepper-progress-line" id="stepper-progress"></div>
+      
+      <div class="stepper-step active" id="step-1" data-step="1">
+        <div class="step-node">1</div>
+        <div class="step-label">Upload</div>
+      </div>
+      
+      <div class="stepper-step" id="step-2" data-step="2">
+        <div class="step-node">2</div>
+        <div class="step-label">Profile</div>
+      </div>
+      
+      <div class="stepper-step" id="step-3" data-step="3">
+        <div class="step-node">3</div>
+        <div class="step-label">Prepare</div>
+      </div>
+      
+      <div class="stepper-step" id="step-4" data-step="4">
+        <div class="step-node">4</div>
+        <div class="step-label">Train</div>
+      </div>
+      
+      <div class="stepper-step" id="step-5" data-step="5">
+        <div class="step-node">5</div>
+        <div class="step-label">Evaluate</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Pipeline Sections Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Left Column: Operations and Configurations (2 Cols) -->
+    <div class="lg:col-span-2 space-y-6">
+      
+      <!-- STEP 1: Upload Dataset Card -->
+      <div class="glass-card neon-glow-cyan" id="section-upload">
+        <div class="card-header pb-3 mb-3 border-b border-white/5">
+          <h3 class="card-title text-base flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            1. File Ingestion
+          </h3>
+          <p class="card-subtitle text-xs font-mono">Upload CSV files to load them into the studio context</p>
+        </div>
+        
+        <div id="upload-dropzone" class="upload-zone relative">
+          <div class="upload-icon">📁</div>
+          <p class="upload-text">Drag and drop your dataset here or click to browse</p>
+          <button class="btn btn-accent" id="upload-select">Select File</button>
+          <input type="file" id="upload-input" accept=".csv" class="hidden" />
+        </div>
+      </div>
+
+      <!-- Dataset Preview Drawer -->
+      <div class="glass-card" id="section-preview">
+        <div class="card-header pb-3 mb-3 border-b border-white/5 flex justify-between items-center">
+          <div>
+            <h3 class="card-title text-base">Dataset Preview</h3>
+            <p class="card-subtitle text-xs font-mono">First 5 rows of ingested spreadsheet data</p>
+          </div>
+          <div class="text-[10px] text-slate-500 font-mono" id="preview-row-indicator">Awaiting upload...</div>
+        </div>
+        <div id="preview-table-wrapper" class="data-table-wrapper overflow-x-auto min-h-[100px] flex items-center justify-center bg-slate-950/20">
+          <span class="text-xs text-slate-500 font-mono">No active dataset preview. Upload a CSV to begin.</span>
+        </div>
+      </div>
+
+      <!-- STEP 2: Profiling & Task Detection Card -->
+      <div class="glass-card" id="section-profile">
+        <div class="card-header pb-3 mb-3 border-b border-white/5">
+          <h3 class="card-title text-base flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-violet-400"></span>
+            2. Task Identification & Config
+          </h3>
+          <p class="card-subtitle text-xs font-mono">AutoDS automatically determines target column types and problem classes</p>
+        </div>
+        
+        <div class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label class="form-label">Target Field (Optional)</label>
+              <input type="text" id="target-column" class="form-input font-mono" placeholder="Leave empty for auto-detect" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Problem Override Hint (Optional)</label>
+              <select id="task-hint" class="form-select font-mono">
+                <option value="">Auto-Detect Task</option>
+                <option value="classification">Classification (Categories)</option>
+                <option value="regression">Regression (Continuous values)</option>
+                <option value="clustering">Clustering (Unsupervised groups)</option>
+                <option value="time_series">Time Series (Forecasting)</option>
+                <option value="nlp">Natural Language Processing (Text)</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Cleaning Parameters Accordion -->
+          <div class="p-4 bg-white/[0.02] border border-white/5 rounded-lg space-y-3">
+            <span class="text-[11px] font-bold tracking-wider text-slate-400 uppercase font-mono block">Data Clean Constraints</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="form-group">
+                <label class="form-label">Numeric Imputation</label>
+                <select id="clean-impute-numeric" class="form-select font-mono text-xs">
+                  <option value="median">Median value substitution</option>
+                  <option value="mean">Mean value substitution</option>
+                  <option value="most_frequent">Most frequent (Mode)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Categorical Imputation</label>
+                <select id="clean-impute-categorical" class="form-select font-mono text-xs">
+                  <option value="most_frequent">Most frequent (Mode)</option>
+                  <option value="constant">Constant flag placeholder</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex items-center gap-6 pt-1">
+              <label class="flex items-center gap-2 text-xs font-mono text-slate-300 cursor-pointer">
+                <input type="checkbox" id="clean-drop-duplicates" checked class="accent-violet-500 rounded" />
+                Drop Duplicates
+              </label>
+              <label class="flex items-center gap-2 text-xs font-mono text-slate-300 cursor-pointer">
+                <input type="checkbox" id="clean-scale-numeric" checked class="accent-violet-500 rounded" />
+                Scale Numeric Features
+              </label>
+            </div>
+          </div>
+
+          <div class="flex gap-3 flex-wrap">
+            <button class="btn btn-primary" id="detect-task-button" disabled>Detect Task Class</button>
+            <button class="btn btn-secondary" id="prepare-button" disabled>Clean & Prep Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right Column: Status summary and live log screens (1 Col) -->
+    <div class="space-y-6">
+      
+      <!-- Stats Sidebar Card -->
+      <div class="glass-card">
+        <div class="card-header pb-3 mb-3 border-b border-white/5">
+          <h3 class="card-title text-base">Context State</h3>
+          <p class="card-subtitle text-xs font-mono">Current session attributes</p>
+        </div>
+        
+        <div class="space-y-3 font-mono text-xs">
+          <div class="flex justify-between border-b border-white/5 pb-2">
+            <span class="text-slate-500">File loaded:</span>
+            <span id="dataset-status" class="text-slate-200 text-right max-w-[150px] truncate font-semibold">-</span>
+          </div>
+          <div class="flex justify-between border-b border-white/5 pb-2">
+            <span class="text-slate-500">Total samples:</span>
+            <span id="dataset-rows" class="text-slate-200 font-semibold">-</span>
+          </div>
+          <div class="flex justify-between border-b border-white/5 pb-2">
+            <span class="text-slate-500">Feature columns:</span>
+            <span id="dataset-cols" class="text-slate-200 font-semibold">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: Model Selector & Training Console -->
+      <div class="glass-card hidden space-y-4" id="section-train-controls">
+        <div class="card-header pb-3 mb-3 border-b border-white/5">
+          <h3 class="card-title text-base flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            3. Training Run
+          </h3>
+          <p class="card-subtitle text-xs font-mono">Setup model execution and launch training loop</p>
+        </div>
+
+        <!-- Detected Task Details Card -->
+        <div id="analysis-card" class="p-4 bg-violet-600/[0.04] border border-violet-500/20 rounded-lg space-y-2.5 font-mono text-xs">
+          <div class="flex justify-between">
+            <span class="text-slate-500">Detected task:</span>
+            <span id="analysis-task" class="text-cyan-400 font-bold uppercase">-</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Confidence score:</span>
+            <span id="analysis-confidence" class="text-violet-400 font-bold">-</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Identified Target:</span>
+            <span id="analysis-target" class="text-slate-200 font-semibold">-</span>
+          </div>
+          <div class="flex flex-col gap-1 border-t border-white/5 pt-2">
+            <span class="text-slate-500 block">Identified Features:</span>
+            <span id="analysis-features" class="text-slate-400 max-h-[60px] overflow-y-auto block pr-1 leading-normal">-</span>
+          </div>
+          <div class="border-t border-white/5 pt-2 flex flex-col gap-2">
+            <span class="text-slate-500 block">Candidate Models:</span>
+            <div class="flex flex-wrap gap-1.5" id="model-candidates"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Validation Holdout Ratio</label>
+          <select id="train-test-size" class="form-select font-mono text-xs">
+            <option value="0.2">20% Holdout (Recommended)</option>
+            <option value="0.1">10% Holdout</option>
+            <option value="0.3">30% Holdout</option>
+          </select>
+        </div>
+
+        <div class="flex gap-2">
+          <button class="btn btn-accent w-full justify-center" id="train-button">Execute Model Sweep</button>
+        </div>
+      </div>
+
+      <!-- Training Status / Log Terminal Console -->
+      <div class="glass-card hidden" id="section-terminal">
+        <div class="card-header pb-3 mb-3 border-b border-white/5 flex justify-between items-center">
+          <div>
+            <h3 class="card-title text-base">Execution Engine</h3>
+            <p class="card-subtitle text-xs font-mono">Live model training feed</p>
+          </div>
+          <span class="text-[10px] bg-slate-900 px-2 py-0.5 border border-white/10 rounded font-mono text-slate-400" id="training-state">IDLE</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-4 font-mono text-xs">
+          <div class="p-3 bg-white/[0.02] border border-white/5 rounded-lg flex flex-col justify-between">
+            <span class="text-slate-500">Sweep Job ID</span>
+            <strong id="training-job-id" class="text-slate-200 mt-1 block truncate max-w-[100px]">waiting</strong>
+          </div>
+          <div class="p-3 bg-white/[0.02] border border-white/5 rounded-lg flex flex-col justify-between">
+            <span class="text-slate-500">Accuracy Progress</span>
+            <strong id="training-progress" class="text-emerald-400 mt-1 block">0%</strong>
+          </div>
+        </div>
+
+        <!-- Terminal Console Block -->
+        <div class="terminal-wrapper">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="terminal-dot red"></span>
+              <span class="terminal-dot yellow"></span>
+              <span class="terminal-dot green"></span>
+            </div>
+            <div class="terminal-title">AutoDS Logs</div>
+          </div>
+          <div class="terminal-body scrollbar-hide" id="training-log">
+            <div class="text-slate-500 font-mono">Awaiting training triggers...</div>
+          </div>
+        </div>
+
+        <!-- Evaluate trigger button (visible when completed) -->
+        <button class="btn btn-primary w-full justify-center mt-4 hidden" id="evaluate-button">Generate Leaderboard</button>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,58 +1,110 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
-AutoDS-LLM Quick Start Script
-Starts both backend and frontend services
+AutoDS-LLM Startup Script
+Starts FastAPI backend with agent-based workflow
 """
 
 import os
 import sys
 import subprocess
-import time
-import platform
 from pathlib import Path
 
-# Get project root
-PROJECT_ROOT = Path(__file__).parent
+
+def main():
+    """Start the AutoDS-LLM application."""
+    
+    # Get project root
+    project_root = Path(__file__).parent.resolve()
+    
+    print("=" * 70)
+    print("🤖 AutoDS-LLM - Automated Data Science with Agent-Based Workflow")
+    print("=" * 70)
+    
+    # Check if venv is activated
+    if sys.prefix == sys.base_prefix:
+        print("\n⚠️  Warning: Virtual environment not detected!")
+        print("Please activate your virtual environment first:")
+        print("  Windows: .venv\\Scripts\\activate")
+        print("  Linux/Mac: source .venv/bin/activate")
+    
+    # Change to project root
+    os.chdir(project_root)
+    
+    print("\n📦 Project structure verified:")
+    required_dirs = ["backend", "frontend", "outputs", "backend/models"]
+    for dir_name in required_dirs:
+        dir_path = project_root / dir_name
+        status = "✓" if dir_path.exists() else "✗"
+        print(f"  {status} {dir_name}")
+    
+    # Create necessary directories
+    (project_root / "backend" / "models" / "trained_models").mkdir(parents=True, exist_ok=True)
+    (project_root / "outputs" / "reports").mkdir(parents=True, exist_ok=True)
+    
+    print("\n🚀 Starting AutoDS-LLM...")
+    print("-" * 70)
+    
+    try:
+        print("\n📡 Starting FastAPI backend on http://localhost:8000")
+        print("   API Docs: http://localhost:8000/docs")
+        print("\n🌐 Frontend: http://localhost:8000/index.html")
+        print("\nPress Ctrl+C to stop the server.\n")
+        
+        # Start backend
+        backend_cmd = [
+            sys.executable,
+            "-m",
+            "uvicorn",
+            "backend.main:app",
+            "--host", "0.0.0.0",
+            "--port", "8000",
+            "--reload",
+        ]
+        
+        subprocess.run(backend_cmd, cwd=str(project_root))
+        
+    except KeyboardInterrupt:
+        print("\n\n🛑 Shutting down AutoDS-LLM...")
+        print("Goodbye!")
+    except Exception as e:
+        print(f"\n❌ Error: {str(e)}")
+        sys.exit(1)
 
 
-def print_banner():
-    """Print project banner"""
-    print("""
-    ╔════════════════════════════════════════════════════════════╗
-    ║                                                            ║
-    ║  🤖 AutoDS-LLM - Automated Data Science Platform          ║
-    ║                                                            ║
-    ║  Self-Adapting Language Model Pipeline for               ║
-    ║  Automated Machine Learning Recommendations              ║
-    ║                                                            ║
-    ╚════════════════════════════════════════════════════════════╝
-    """)
+if __name__ == "__main__":
+    main()
 
 
 def check_dependencies():
     """Check if required packages are installed"""
     print("📋 Checking dependencies...")
     
-    required_packages = {
-        'fastapi': 'backend',
-        'streamlit': 'frontend',
-        'pandas': 'backend/frontend',
-    }
-    
+    required_modules = ['fastapi', 'uvicorn', 'pandas']
     missing = []
-    for package in ['fastapi', 'streamlit', 'pandas']:
+    for module in required_modules:
         try:
-            __import__(package)
-            print(f"  ✓ {package}")
+            __import__(module)
+            print(f"  ✓ {module}")
         except ImportError:
-            print(f"  ✗ {package} - NOT INSTALLED")
-            missing.append(package)
-    
-    if missing:
-        print(f"\n⚠️  Missing packages: {', '.join(missing)}")
+            print(f"  ✗ {module} - NOT INSTALLED")
+            missing.append(module)
+
+    node_missing = False
+    try:
+        subprocess.run(['node', '--version'], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print('  ✓ node')
+    except Exception:
+        print('  ✗ node - NOT INSTALLED or not on PATH')
+        node_missing = True
+
+    if missing or node_missing:
+        if missing:
+            print(f"\n⚠️  Missing Python packages: {', '.join(missing)}")
+        if node_missing:
+            print('\n⚠️  Node.js is required for the React frontend.')
         print("Please install dependencies:")
         print(f"  pip install -r backend/requirements.txt")
-        print(f"  pip install -r frontend/requirements.txt")
+        print(f"  cd frontend && npm install")
         return False
     
     print("\n✓ All dependencies installed!\n")
@@ -88,16 +140,14 @@ def start_backend():
         sys.executable,
         '-m',
         'uvicorn',
-        'main:app',
+        'backend.main:app',
         '--host', '0.0.0.0',
         '--port', '8000',
         '--reload'
     ]
     
     try:
-        # Change to backend directory
-        os.chdir(PROJECT_ROOT / 'backend')
-        subprocess.Popen(cmd)
+        subprocess.Popen(cmd, cwd=str(PROJECT_ROOT))
         print("✓ Backend started in separate process")
         time.sleep(3)  # Give backend time to start
         return True
@@ -107,27 +157,19 @@ def start_backend():
 
 
 def start_frontend():
-    """Start Streamlit frontend"""
-    print("🎨 Starting Frontend (Streamlit)...")
+    """Start React frontend"""
+    print("🎨 Starting Frontend (React + Tailwind)...")
     print("   Running on: http://localhost:8501")
     print()
     
-    frontend_app = PROJECT_ROOT / 'frontend' / 'app.py'
-    
     cmd = [
-        sys.executable,
-        '-m',
-        'streamlit',
+        'npm',
         'run',
-        str(frontend_app),
-        '--server.port=8501',
-        '--server.address=0.0.0.0'
+        'dev',
     ]
     
     try:
-        # Change to frontend directory
-        os.chdir(PROJECT_ROOT / 'frontend')
-        subprocess.Popen(cmd)
+        subprocess.Popen(cmd, cwd=str(PROJECT_ROOT / 'frontend'))
         print("✓ Frontend started in separate process")
         return True
     except Exception as e:

@@ -1,10 +1,456 @@
-# AutoDS-LLM Project Documentation
+# 🤖 AutoDS-LLM - Automated Data Science Platform
 
-## 🤖 AutoDS-LLM: A Self-Adapting Language Model Pipeline for Automated Data Science
+**Automated Machine Learning with Agent-Based Workflow**
 
-### Project Overview
+A clean, production-ready AutoML system that combines:
+- **Problem Detector Agent** - Identifies task type (Classification, Regression, Clustering, Time Series)
+- **Data Cleaning Agent** - Handles missing values, categorical encoding, scaling
+- **Model Selector Agent** - Recommends suitable ML models
+- **Training Agent** - Trains and compares multiple models
+- **Evaluation Agent** - Evaluates models with appropriate metrics
+- **Report Agent** - Generates predictions, insights, and visualizations
 
-AutoDS-LLM is a professional prototype platform that automatically analyzes data science tasks and dynamically recommends optimized machine learning pipelines using adaptive intelligent routing. The system is designed to democratize ML pipeline selection by providing data-driven recommendations based on dataset characteristics, task descriptions, and machine learning best practices.
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.8+
+- Virtual Environment (recommended)
+
+### Installation
+
+```bash
+# Clone repository
+cd AutoDS-LLM
+
+# Create virtual environment
+python -m venv .venv
+
+# Activate virtual environment
+# Windows:
+.venv\Scripts\activate
+# Linux/Mac:
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### Running the Application
+
+```bash
+python run.py
+```
+
+The application will start on:
+- **Frontend**: http://localhost:8000/index.html
+- **Backend API**: http://localhost:8000
+- **API Documentation**: http://localhost:8000/docs
+
+## 📋 Project Structure
+
+```
+AutoDS-LLM/
+├── backend/
+│   ├── agents/                    # Agent implementations
+│   │   ├── problem_detector.py   # Detects task type
+│   │   ├── data_cleaner.py       # Data preprocessing
+│   │   ├── model_selector.py     # Model recommendation
+│   │   ├── trainer.py            # Model training
+│   │   ├── evaluator.py          # Model evaluation
+│   │   └── report_generator.py   # Report & visualization
+│   ├── models/
+│   │   └── trained_models/       # Saved models
+│   ├── main.py                   # FastAPI application
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── index.html                # Main UI
+│   ├── styles.css                # Styling
+│   └── app.js                    # Frontend logic
+│
+├── outputs/
+│   ├── reports/                  # Generated reports
+│   └── models/                   # Model artifacts
+│
+├── datasets/                     # Sample datasets
+├── diagrams/                     # Architecture diagrams
+├── run.py                        # Start script
+└── README.md                     # This file
+```
+
+## 🔄 Workflow
+
+### Step 1: Upload Dataset
+- Upload CSV file
+- Preview data with shape and columns
+- System stores dataset in session
+
+### Step 2: Analyze Problem
+- Optional: Select target column
+- Agent detects problem type:
+  - **Classification**: For categorical targets
+  - **Regression**: For continuous targets
+  - **Clustering**: When no target specified
+  - **Time Series**: For temporal data
+- Returns confidence score and reasoning
+
+### Step 3: Prepare Data
+- Handles missing values (median/mode imputation)
+- Encodes categorical variables (one-hot encoding)
+- Scales numerical features (StandardScaler)
+- Detects and flags outliers
+- Reports transformation steps
+
+### Step 4: Select Models
+- Agent suggests models based on problem type
+- **Classification**: Random Forest, Logistic Regression, XGBoost, LightGBM
+- **Regression**: Random Forest, Linear Regression, XGBoost, LightGBM
+- **Clustering**: KMeans, DBSCAN, Hierarchical Clustering
+- **Time Series**: ARIMA, Prophet, Exponential Smoothing
+
+### Step 5: Train Models
+- Train all selected models in parallel
+- Split data (default 80/20 train/test)
+- Cross-validation scoring
+- Save trained models
+- Identify best model
+
+### Step 6: Evaluate Models
+- Calculate metrics per model:
+  - **Classification**: Accuracy, Precision, Recall, F1-Score, ROC-AUC
+  - **Regression**: R², RMSE, MAE, MAPE
+  - **Clustering**: Silhouette Score, Davies-Bouldin Index
+- Compare and rank models
+- Highlight best performer
+
+### Step 7: Generate Report
+- Create comprehensive report:
+  - Model metrics
+  - Performance insights
+  - Visualizations (confusion matrix, prediction plots)
+  - Recommendations
+  - Predictions on dataset
+
+## 🔌 API Endpoints
+
+### Upload Dataset
+```
+POST /api/upload
+Content-Type: multipart/form-data
+- file: CSV file
+
+Response:
+{
+  "status": "success",
+  "shape": [rows, cols],
+  "columns": [...],
+  "preview": {...}
+}
+```
+
+### Analyze Problem
+```
+POST /api/analyze
+Content-Type: application/json
+{
+  "target_column": "optional_column_name"
+}
+
+Response:
+{
+  "status": "success",
+  "analysis": {
+    "problem_type": "classification|regression|clustering|time_series",
+    "confidence": 0.9,
+    "reasoning": "...",
+    "metadata": {...}
+  }
+}
+```
+
+### Prepare Data
+```
+POST /api/prepare
+
+Response:
+{
+  "status": "success",
+  "original_shape": [n, m],
+  "final_shape": [n, m],
+  "steps": ["..."]
+}
+```
+
+### Select Models
+```
+POST /api/select-models
+
+Response:
+{
+  "status": "success",
+  "selected_models": ["Model1", "Model2", ...],
+  "primary_model": "BestModel",
+  "recommendations": ["..."]
+}
+```
+
+### Train Models
+```
+POST /api/train
+Content-Type: application/json
+{
+  "model_names": ["optional", "list"],
+  "test_size": 0.2
+}
+
+Response:
+{
+  "status": "success",
+  "best_model": "ModelName",
+  "best_score": 0.95,
+  "training_results": {...}
+}
+```
+
+### Evaluate Models
+```
+POST /api/evaluate
+
+Response:
+{
+  "status": "success",
+  "evaluation_results": {
+    "ModelName": {...metrics...}
+  },
+  "comparison": [...]
+}
+```
+
+### Generate Report
+```
+POST /api/report
+Content-Type: application/json
+{
+  "model_name": "ModelName"
+}
+
+Response:
+{
+  "status": "success",
+  "report": {
+    "metrics": {...},
+    "insights": ["..."],
+    "visualizations": {...}
+  }
+}
+```
+
+### Get Session Status
+```
+GET /api/session
+
+Response:
+{
+  "status": "success",
+  "session": {
+    "has_data": true,
+    "data_shape": [n, m],
+    "problem_type": "classification",
+    "has_cleaned_data": true
+  }
+}
+```
+
+### Reset Session
+```
+POST /api/reset
+
+Response:
+{
+  "status": "success",
+  "message": "Session reset"
+}
+```
+
+## 📊 Supported Algorithms
+
+### Classification
+- Random Forest
+- Logistic Regression
+- XGBoost
+- LightGBM
+
+### Regression
+- Random Forest
+- Linear Regression
+- XGBoost
+- LightGBM
+
+### Clustering
+- KMeans
+- DBSCAN
+- Hierarchical Clustering
+
+### Time Series
+- ARIMA
+- Prophet
+- Exponential Smoothing
+
+## 🎨 Frontend Features
+
+- **7-Step Wizard Interface**: Guided workflow from data to report
+- **Drag & Drop Upload**: Easy file upload with preview
+- **Real-time Feedback**: Status messages and progress indicators
+- **Interactive Results**: Display metrics, insights, visualizations
+- **Responsive Design**: Works on desktop and tablet
+- **Dark-friendly Colors**: Modern, professional color scheme
+
+## 🛠️ Technology Stack
+
+**Backend:**
+- FastAPI 0.104.1
+- Python 3.8+
+- scikit-learn 1.3.2
+- XGBoost 2.0.3
+- LightGBM 4.0.0
+- pandas 2.2.3
+- numpy 1.26.4
+
+**Frontend:**
+- HTML5
+- CSS3 (with CSS Variables)
+- Vanilla JavaScript (ES6+)
+- Fetch API
+
+## 📈 Agents Architecture
+
+### Problem Detector Agent
+Analyzes dataset to determine ML task type:
+- Checks target column presence and type
+- Detects time-indexed data
+- Analyzes feature distributions
+- Provides confidence scores and reasoning
+
+### Data Cleaning Agent
+Preprocesses data automatically:
+- Imputes missing values (median for numeric, mode for categorical)
+- Encodes categorical variables
+- Scales numerical features with StandardScaler
+- Detects and flags outliers
+
+### Model Selector Agent
+Recommends models based on problem type:
+- Problem-specific algorithm selection
+- Provides model-specific recommendations
+- Handles special cases (imbalanced data, etc.)
+
+### Training Agent
+Trains selected models and compares:
+- Splits data into train/test sets
+- Trains each model independently
+- Performs cross-validation
+- Saves models to disk
+- Tracks best performer
+
+### Evaluation Agent
+Evaluates models comprehensively:
+- Calculates problem-appropriate metrics
+- Generates confusion matrices (classification)
+- Compares models and ranks them
+- Provides detailed performance analysis
+
+### Report Agent
+Generates professional reports:
+- Summarizes predictions and metrics
+- Creates visualizations (plots, confusion matrices)
+- Generates insights and recommendations
+- Exports reports to JSON/Markdown
+
+## 🔒 Clean Code Principles
+
+✓ **Modular**: Each agent handles one responsibility  
+✓ **Reusable**: Agents can be used independently  
+✓ **Testable**: Clear interfaces for unit testing  
+✓ **Documented**: Comprehensive docstrings  
+✓ **Typed**: Type hints for better IDE support  
+✓ **Production-Ready**: Error handling, logging, validation  
+
+## 📝 Example Usage
+
+```python
+# Direct Python usage of agents
+from backend.agents import ProblemDetectorAgent, DataCleaningAgent
+
+# Initialize agents
+detector = ProblemDetectorAgent()
+cleaner = DataCleaningAgent()
+
+# Analyze dataset
+import pandas as pd
+df = pd.read_csv("data.csv")
+analysis = detector.detect_problem(df, target_column="target")
+
+# Clean data
+cleaned_df, report = cleaner.clean_data(df, target_column="target")
+
+# Results
+print(f"Problem Type: {analysis['problem_type']}")
+print(f"Steps Applied: {report['steps_applied']}")
+```
+
+## 🚨 Troubleshooting
+
+### API Connection Issues
+- Ensure backend is running: `python run.py`
+- Check API is accessible: http://localhost:8000/docs
+- Browser CORS should be auto-handled
+
+### Model Training Fails
+- Check data has enough samples (>10 rows recommended)
+- Ensure target column is correctly specified
+- Review data preparation output for issues
+
+### Frontend Not Loading
+- Clear browser cache (Ctrl+F5 / Cmd+Shift+R)
+- Check browser console for errors
+- Ensure CSS and JS files are properly linked
+
+## 🤝 Contributing
+
+Contributions welcome! Areas for enhancement:
+- Add more ML algorithms
+- Implement cross-validation strategies
+- Add hyperparameter tuning
+- Support for custom preprocessing steps
+- Parallel model training
+- Advanced visualizations
+
+## 📄 License
+
+This project is provided as-is for educational and demonstration purposes.
+
+## 🎯 Future Enhancements
+
+- [ ] Hyperparameter optimization
+- [ ] Automated feature engineering
+- [ ] Model explainability (SHAP, LIME)
+- [ ] Ensemble methods
+- [ ] Automated cross-validation
+- [ ] Cloud deployment templates
+- [ ] Database integration for history tracking
+- [ ] Real-time model monitoring
+- [ ] API authentication & rate limiting
+
+## 💬 Support
+
+For issues or questions, please check:
+1. API Documentation: http://localhost:8000/docs
+2. Frontend console for errors (F12)
+3. Backend logs in terminal output
+
+---
+
+**Built with ❤️ for automated machine learning**
 
 ### Problem Statement
 
@@ -53,18 +499,19 @@ Data scientists spend significant time determining:
 
 ```
 ┌─────────────────────────────────────────┐
-│        Frontend (Streamlit)             │
-│  - Dashboard UI                         │
-│  - File Upload                          │
-│  - Interactive Pages                    │
+│        Frontend (React + Tailwind)      │
+│  - Responsive dashboard                 │
+│  - File upload and dataset analysis     │
+│  - Task prediction, recommendation,     │
+│    training, and reporting workflows    │
 └──────────────┬──────────────────────────┘
                │ HTTP/REST
                ▼
 ┌─────────────────────────────────────────┐
 │       Backend API (FastAPI)             │
 │  - Endpoints                            │
-│  - Request Validation                   │
-│  - Response Formatting                  │
+│  - Request validation                   │
+│  - Model orchestration                  │
 └──────────────┬──────────────────────────┘
                │
     ┌──────────┼──────────┐
@@ -113,7 +560,7 @@ pip install -r requirements.txt
 #### Step 4: Install Frontend Dependencies
 ```bash
 cd ../frontend
-pip install -r requirements.txt
+npm install
 ```
 
 #### Step 5: Generate Sample Datasets
@@ -140,10 +587,10 @@ API Docs at: `http://localhost:8000/api/docs`
 **Terminal 2 - Start Frontend:**
 ```bash
 cd frontend
-streamlit run app.py
+npm run dev
 ```
 
-Frontend will open at: `http://localhost:8501`
+Frontend will open at the Vite URL shown in the console, typically `http://localhost:8501`.
 
 #### Option 2: Quick Start Script
 ```bash
@@ -246,18 +693,20 @@ AutoDS-LLM/
 │   └── __init__.py
 │
 ├── frontend/
-│   ├── pages/
-│   │   ├── home.py            # Home page
-│   │   ├── data_upload.py     # Data upload & analysis
-│   │   ├── task_prediction.py # Task prediction
-│   │   ├── pipeline_recommendation.py # Recommendations
-│   │   ├── examples.py        # Examples & use cases
-│   │   └── __init__.py
-│   ├── components/
-│   │   └── __init__.py        # Reusable components
-│   ├── app.py                 # Main Streamlit app
-│   ├── requirements.txt       # Frontend dependencies
-│   └── __init__.py
+│   ├── src/
+│   │   ├── App.jsx            # Main React application
+│   │   ├── index.css          # Tailwind styles
+│   │   ├── main.jsx           # React entrypoint
+│   │   ├── services/
+│   │   │   └── api.js         # Frontend API client
+│   │   └── components/        # Optional reusable components
+│   ├── public/                # Static assets (if needed)
+│   ├── package.json           # Frontend npm manifest
+│   ├── postcss.config.js      # Tailwind/PostCSS config
+│   ├── tailwind.config.js     # Tailwind config
+│   ├── vite.config.js         # Vite build config
+│   ├── .env                   # Frontend environment variables
+│   └── README.md              # Frontend run instructions
 │
 ├── datasets/
 │   ├── generate_samples.py    # Sample data generator
@@ -444,10 +893,10 @@ For Time Series:
 - Transformers - NLP models
 
 #### Frontend
-- Streamlit - Web app framework
-- Pandas - Data display
-- Plotly - Interactive visualizations
-- Requests - API calls
+- React - UI framework
+- Tailwind CSS - Styling
+- Vite - Development build tooling
+- Axios - API client
 
 ### Best Practices Used
 
@@ -493,11 +942,13 @@ kill -9 <PID>
 pip install -r requirements.txt --force-reinstall
 ```
 
-#### Streamlit Connection Refused
+#### Frontend Connection Issues
 ```bash
 # Ensure backend is running
-# Check backend is on http://localhost:8000
-# Update API_BASE_URL in .env if needed
+curl http://localhost:8000/api/health
+# Start React frontend in frontend/ directory
+cd frontend
+npm run dev
 ```
 
 ### Future Roadmap

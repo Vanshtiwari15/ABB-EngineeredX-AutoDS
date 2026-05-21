@@ -1,104 +1,183 @@
-"""
-Pydantic schemas for request/response validation
-"""
+"""Pydantic v2 request/response schemas."""
 
-from pydantic import BaseModel, Field
-from typing import Optional, Dict, List, Any
-from enum import Enum
+from __future__ import annotations
 
+from typing import Any
 
-class TaskType(str, Enum):
-    """Supported ML task types"""
-    CLASSIFICATION = "classification"
-    REGRESSION = "regression"
-    CLUSTERING = "clustering"
-    NLP = "nlp"
-    TIME_SERIES = "time_series"
+from pydantic import BaseModel, ConfigDict, Field
+
+from backend.core.constants import JobState, ModelName, TaskType
 
 
-class DataUploadRequest(BaseModel):
-    """Schema for data upload endpoint"""
-    filename: str
-    file_size: int  # in bytes
-    has_header: bool = True
-    target_column: Optional[str] = None
-    
-    class Config:
-        description = "Request body for data upload"
-
-
-class TaskPredictionRequest(BaseModel):
-    """Schema for task prediction endpoint"""
-    task_description: str = Field(..., description="Description of the ML task")
-    dataset_summary: Optional[Dict[str, Any]] = Field(None, description="Summary statistics of dataset")
-    target_column: Optional[str] = None
-    
-    class Config:
-        description = "Request body for task prediction"
-
-
-class ModelRecommendation(BaseModel):
-    """Schema for model recommendation"""
-    name: str
-    library: str
-    reasoning: str
-    pros: List[str]
-    cons: List[str]
-    params: Dict[str, Any]
-
-
-class PreprocessingStep(BaseModel):
-    """Schema for preprocessing recommendation"""
-    step: str
-    method: str
-    reason: str
-
-
-class MetricRecommendation(BaseModel):
-    """Schema for evaluation metric"""
-    name: str
-    formula: str
-    use_case: str
-
-
-class PipelineRecommendationResponse(BaseModel):
-    """Schema for pipeline recommendation response"""
-    task_type: str
-    models: List[ModelRecommendation]
-    preprocessing: List[PreprocessingStep]
-    metrics: List[MetricRecommendation]
-    notes: str
-
-
-class DataAnalysisResponse(BaseModel):
-    """Schema for data analysis response"""
-    n_samples: int
-    n_features: int
-    feature_types: Dict[str, int]
-    missing_values: Dict[str, Any]
-    has_categorical: bool
-    has_datetime: bool
-    memory_usage: float
-    target_stats: Optional[Dict[str, Any]] = None
-
-
-class TaskPredictionResponse(BaseModel):
-    """Schema for task prediction response"""
-    predicted_task: str
-    confidence_scores: Dict[str, float]
-    data_analysis: DataAnalysisResponse
+class APIError(BaseModel):
+    code: str
+    message: str
+    details: dict[str, Any] = Field(default_factory=dict)
+    correlation_id: str | None = None
 
 
 class HealthResponse(BaseModel):
-    """Schema for health check endpoint"""
     status: str
+    app: str
     version: str
-    message: str
 
 
-class RecommendationRequest(BaseModel):
-    """Schema for complete recommendation request"""
-    task_type: Optional[str] = None
-    dataset_size: int
-    has_missing_values: bool = False
-    is_imbalanced: bool = False
+# --- Upload --- #
+class UploadResponse(BaseModel):
+    filename: str
+    n_rows: int
+    n_cols: int
+    columns: list[str]
+    dtypes: dict[str, str]
+    preview: list[dict[str, Any]]
+    message: str = "Dataset uploaded successfully."
+
+
+# --- Analyze --- #
+class AnalyzeRequest(BaseModel):
+    target: str | None = None
+    task_hint: TaskType | None = None
+
+
+class AnalyzeResponse(BaseModel):
+    task_type: TaskType
+    confidence: float
+    reasoning: list[str]
+    target: str | None
+    feature_columns: list[str]
+    text_column: str | None = None
+    datetime_column: str | None = None
+    profile: dict[str, Any]
+
+
+# --- Prepare --- #
+class PrepareRequest(BaseModel):
+    drop_duplicates: bool = True
+    impute_strategy_numeric: str = "median"
+    impute_strategy_categorical: str = "most_frequent"
+    scale_numeric: bool = True
+
+
+class PrepareResponse(BaseModel):
+    steps: list[str]
+    numeric_features: list[str]
+    categorical_features: list[str]
+    text_feature: str | None = None
+    n_rows_in: int
+    n_rows_out: int
+    n_features_out: int
+
+
+# --- Select Models --- #
+class SelectModelsRequest(BaseModel):
+    overrides: list[ModelName] | None = None
+
+
+class ModelCandidate(BaseModel):
+    name: ModelName
+    library: str
+    description: str
+    hyperparameters: dict[str, Any]
+
+
+class SelectModelsResponse(BaseModel):
+    task_type: TaskType
+    candidates: list[ModelCandidate]
+
+
+# --- Train --- #
+class TrainRequest(BaseModel):
+    test_size: float | None = None
+    random_seed: int | None = None
+
+
+class TrainResponse(BaseModel):
+    job_id: str
+    state: JobState
+    message: str = "Training started."
+
+
+class JobModelStatus(BaseModel):
+    name: str
+    state: JobState
+    error: str | None = None
+    duration_seconds: float | None = None
+
+
+class JobStatusResponse(BaseModel):
+    job_id: str
+    state: JobState
+    progress: float = 0.0
+    started_at: float | None = None
+    finished_at: float | None = None
+    models: list[JobModelStatus] = Field(default_factory=list)
+    error: str | None = None
+
+
+# --- Evaluate --- #
+class EvaluateRequest(BaseModel):
+    pass
+
+
+class ModelEvaluation(BaseModel):
+    name: str
+    metrics: dict[str, float]
+
+
+class EvaluateResponse(BaseModel):
+    task_type: TaskType
+    primary_metric: str
+    higher_is_better: bool
+    rankings: list[str]
+    best_model: str
+    evaluations: list[ModelEvaluation]
+
+
+# --- Predict --- #
+class PredictRequest(BaseModel):
+    model_config = ConfigDict(protected_namespaces=())
+
+    rows: list[dict[str, Any]] | None = None
+    model_name: str | None = None  # defaults to best
+
+
+class PredictionRecord(BaseModel):
+    prediction: Any
+    probabilities: dict[str, float] | list[float] | None = None
+
+
+class PredictResponse(BaseModel):
+    model_config = ConfigDict(protected_namespaces=())
+
+    model_name: str
+    n: int
+    predictions: list[PredictionRecord]
+
+
+# --- Report --- #
+class ReportRequest(BaseModel):
+    title: str | None = None
+
+
+class ReportResponse(BaseModel):
+    json_path: str
+    markdown_path: str
+    summary: dict[str, Any]
+
+
+# --- Session --- #
+class SessionResponse(BaseModel):
+    has_dataset: bool
+    dataset: dict[str, Any] | None = None
+    task: AnalyzeResponse | None = None
+    preparation: PrepareResponse | None = None
+    selected_models: list[ModelName] = Field(default_factory=list)
+    trained_models: list[str] = Field(default_factory=list)
+    last_job: JobStatusResponse | None = None
+    evaluation: EvaluateResponse | None = None
+    best_model: str | None = None
+
+
+class ResetResponse(BaseModel):
+    cleared: bool
+    removed_files: int

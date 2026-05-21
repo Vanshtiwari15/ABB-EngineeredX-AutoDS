@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Optional Google Fonts for premium typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+</head>
+<body class="scrollbar-hide">
+
+  <!-- Main Application Wrapper Layout -->
+  <div style="display: flex; min-height: 100vh; background-color: #050508; color: #ffffff; font-family: 'Inter', sans-serif;">
+    
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar-wrapper">
+      <div class="sidebar-content">
+        <div>
+          <!-- Brand Logo Area -->
+          <div class="sidebar-brand">
+            <div class="brand-icon-wrapper">
+              <span class="brand-icon">Ω</span>
+            </div>
+            <div class="brand-text">
+              <h1>NEXUS AI</h1>
+              <p>Workspace v1.0</p>
+            </div>
+          </div>
+
+          <!-- Navigation Links -->
+          <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+              <!-- Inline SVG Icon for scannability -->
+              <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" /></svg>
+              <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="#" class="nav-item">
+              <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+              <span class="nav-label">Models</span>
+            </a>
+            <a href="#" class="nav-item">
+              <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              <span class="nav-label">Settings</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Connection Badge Status Footer -->
+        <div class="sidebar-footer">
+          <div class="status-dot"></div>
+          <span class="nav-label" style="font-size: 0.75rem; color: rgba(255,255,255,0.6)">Node Online</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right Workspace Area -->
+    <div style="flex: 1; display: flex; flex-direction: column; min-width: 0;">
+      
+      <!-- ==================== NAVBAR ==================== -->
+      <header class="navbar-wrapper">
+        <div class="navbar-content">
+          <div>
+            <div class="page-title">AutoML Pipeline</div>
+            <div class="page-subtitle">Configure, execute, and track optimization sweeps</div>
+          </div>
+          <div class="navbar-right">
+            <div class="api-status">
+              <div class="status-dot"></div>
+              <span style="font-size: 0.8rem; color: rgba(255,255,255,0.7)">API Status: 200 OK</span>
+            </div>
+            <button class="btn-icon-sm" aria-label="Notifications">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- ==================== MAIN PAGE CONTAINER ==================== -->
+      <main class="page-container" style="display: flex; flex-direction: column; gap: 2rem;">
+        
+        <!-- Workflow Tracking Progress Tracker -->
+        <div class="stepper-container">
+          <div class="stepper-progress-line" style="width: 50%;"></div>
+          <div class="stepper-step completed">
+            <div class="step-node">✓</div>
+            <div class="step-label">Ingest Data</div>
+          </div>
+          <div class="stepper-step active">
+            <div class="step-node">2</div>
+            <div class="step-label">Hyperparameters</div>
+          </div>
+          <div class="stepper-step">
+            <div class="step-node">3</div>
+            <div class="step-label">Execute Sweep</div>
+          </div>
+          <div class="stepper-step">
+            <div class="step-node">4</div>
+            <div class="step-label">Deploy Model</div>
+          </div>
+        </div>
+
+        <!-- Layout Grids for Content Components -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+          
+          <!-- Column A: Input Form Configuration Parameters -->
+          <section class="glass-card neon-glow-cyan" style="display: flex; flex-direction: column; gap: 1.25rem;">
+            <h2 style="font-size: 1.1rem; margin: 0; font-weight: 600;" class="text-gradient">Sweep Settings</h2>
+            
+            <div class="form-group">
+              <label class="form-label">Model Target Field</label>
+              <input type="text" class="form-input" placeholder="e.g., converted_values">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Optimization Strategy</label>
+              <select class="form-select">
+                <option>Bayesian Optimization</option>
+                <option>Random Grid Search</option>
+                <option>Hyperband Sweep</option>
+              </select>
+            </div>
+
+            <!-- Drag-and-Drop Dataset Container -->
+            <div class="upload-zone">
+              <div class="upload-icon">✦</div>
+              <div class="upload-text">Drop training sets or click to browse</div>
+              <span class="badge badge-cyan">CSV or Parquet</span>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+              <button class="btn btn-primary" style="flex: 1;">Start Training</button>
+              <button class="btn btn-secondary">Cancel</button>
+            </div>
+          </section>
+
+          <!-- Column B: Terminal Console Logging Monitor -->
+          <section style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="terminal-wrapper" style="flex: 1; display: flex; flex-direction: column;">
+              <div class="terminal-header">
+                <div class="terminal-dots">
+                  <div class="terminal-dot red"></div>
+                  <div class="terminal-dot yellow"></div>
+                  <div class="terminal-dot green"></div>
+                </div>
+                <div class="terminal-title">Live Process Output</div>
+              </div>
+              <div class="terminal-body" style="flex: 1;">
+                <div class="log-line info">[INFO] Pipeline session initialized successfully.</div>
+                <div class="log-line">[SYS] Connecting core tensor workers...</div>
+                <div class="log-line"><strong>Worker-01:</strong> Ingesting validation array chunk.</div>
+                <div class="log-line"><strong>Worker-02:</strong> Reshaping dimensions to shape (None, 256).</div>
+                <div class="log-line class error">[ERR] Learning rate explosion danger encountered on Run 12.</div>
+                <div class="log-line info">[INFO] Retrying step using AdamW variant adjustments...</div>
+                <span class="terminal-cursor"></span>
+              </div>
+            </div>
+
+            <!-- Leaderboard Display Component -->
+            <div class="leaderboard-item best">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <span class="leaderboard-rank">01</span>
+                <div>
+                  <div style="font-weight: 600; font-size: 0.9rem;">Run-Chinchilla-Alpha</div>
+                  <div style="font-size: 0.75rem; color: rgba(255,255,255,0.4)">Val Loss: 0.114</div>
+                </div>
+              </div>
+              <span class="badge badge-green">98.4% Acc</span>
+            </div>
+          </section>
+        </div>
+
+        <!-- Bottom Data Display Table Overview Component -->
+        <section class="glass-card">
+          <h2 style="font-size: 1.1rem; margin-bottom: 1rem; font-weight: 600;">Active Iteration Registry</h2>
+          <div class="data-table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Job ID</th>
+                  <th>Loss Target</th>
+                  <th>Status State</th>
+                  <th>Telemetry Trace</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#EXP-4022</td>
+                  <td>0.0415</td>
+                  <td><span class="badge badge-green">Converged</span></td>
+                  <td><span class="text-gradient-green">Stable</span></td>
+                </tr>
+                <tr>
+                  <td>#EXP-4023</td>
+                  <td>0.1982</td>
+                  <td><span class="badge badge-cyan">Processing</span></td>
+                  <td><span class="text-gradient">Evaluating</span></td>
+                </tr>
+                <tr>
+                  <td>#EXP-4024</td>
+                  <td>--</td>
+                  <td><span class="badge">Queued</span></td>
+                  <td style="color: rgba(255,255,255,0.3)">Pending</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notification Alert Component Example Layer -->
+  <div class="toast-notification success show">
+    <span>Pipeline iteration sweep has compiled cleanly!</span>
+  </div>
+
+  <!-- Hidden Loading Overlay Backdrop System Layer Spinner -->
+  <div class="loading-overlay hidden">
+    <div class="spinner"></div>
+  </div>
+
+</body>
+</html>

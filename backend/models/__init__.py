@@ -1,29 +1,3 @@
-"""Models package for AutoDS-LLM"""
+"""Pydantic request/response schemas for the API."""
 
-from .schemas import (
-    TaskType,
-    DataUploadRequest,
-    TaskPredictionRequest,
-    ModelRecommendation,
-    PreprocessingStep,
-    MetricRecommendation,
-    PipelineRecommendationResponse,
-    DataAnalysisResponse,
-    TaskPredictionResponse,
-    HealthResponse,
-    RecommendationRequest,
-)
-
-__all__ = [
-    "TaskType",
-    "DataUploadRequest",
-    "TaskPredictionRequest",
-    "ModelRecommendation",
-    "PreprocessingStep",
-    "MetricRecommendation",
-    "PipelineRecommendationResponse",
-    "DataAnalysisResponse",
-    "TaskPredictionResponse",
-    "HealthResponse",
-    "RecommendationRequest",
-]
+from backend.models.schemas import *  # noqa: F401,F403

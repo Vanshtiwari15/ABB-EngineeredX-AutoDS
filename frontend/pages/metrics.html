@@ -1,0 +1,118 @@
+<div class="space-y-6">
+  <!-- Evaluations Spotlight Grid -->
+  <div class="metrics-grid">
+    <!-- Spotlight: Best Performing Model -->
+    <div class="glass-card neon-glow-green flex flex-col justify-between min-h-[140px] relative">
+      <div>
+        <div class="metric-label flex items-center gap-2">
+          <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          Best Pipeline Model
+        </div>
+        <div class="metric-value text-2xl truncate mt-1 text-emerald-400 font-bold" id="metrics-best-model">None Trained</div>
+      </div>
+      <div class="metric-change text-slate-400 font-mono text-xs mt-2">
+        Recommended for inference deployments.
+      </div>
+      <span class="absolute top-4 right-4 text-emerald-400/20 font-bold text-3xl font-mono select-none">GOLD</span>
+    </div>
+
+    <!-- Metric Score Card -->
+    <div class="glass-card flex flex-col justify-between min-h-[140px] relative">
+      <div>
+        <div class="metric-label flex items-center gap-2">
+          <svg class="w-3.5 h-3.5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+          Primary Metric Score
+        </div>
+        <div class="metric-value text-2xl mt-1 text-slate-100 font-bold" id="metrics-accuracy">-</div>
+      </div>
+      <div class="metric-change text-slate-400 font-mono text-xs mt-2">
+        Out-of-fold holdout validation metric.
+      </div>
+      <span class="absolute top-4 right-4 text-cyan-400/20 font-bold text-3xl font-mono select-none">SCORE</span>
+    </div>
+
+    <!-- Candidate Count Card -->
+    <div class="glass-card flex flex-col justify-between min-h-[140px] relative">
+      <div>
+        <div class="metric-label flex items-center gap-2">
+          <svg class="w-3.5 h-3.5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+          Swept Model Count
+        </div>
+        <div class="metric-value text-2xl mt-1 text-slate-100 font-bold" id="metrics-model-count">0</div>
+      </div>
+      <div class="metric-change text-slate-400 font-mono text-xs mt-2">
+        Trained model pipelines verified.
+      </div>
+      <span class="absolute top-4 right-4 text-violet-400/20 font-bold text-3xl font-mono select-none">SIZE</span>
+    </div>
+  </div>
+
+  <!-- Leaderboard list & chart layout -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Model Comparison Chart (Takes 2 Columns) -->
+    <div class="glass-card lg:col-span-2">
+      <div class="card-header border-b border-white/5 pb-4 mb-4 flex justify-between items-center">
+        <div>
+          <h3 class="card-title text-base">Model Accuracy Sweep Comparison</h3>
+          <p class="card-subtitle text-xs">Visualize final comparison metrics across trained algorithms</p>
+        </div>
+      </div>
+      <div class="chart-container h-[280px]">
+        <canvas id="metrics-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Leaderboard Table List (Takes 1 Column) -->
+    <div class="glass-card">
+      <div class="card-header border-b border-white/5 pb-4 mb-4 flex items-center justify-between">
+        <div>
+          <h3 class="card-title text-base">Leaderboard</h3>
+          <p class="card-subtitle text-xs font-mono">Ranked performance list</p>
+        </div>
+        <span class="text-[9px] bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 rounded text-emerald-400 font-bold font-mono">STABLE</span>
+      </div>
+      <div class="overflow-y-auto max-h-[280px] space-y-3 pr-1" id="leaderboard-list-root">
+        <!-- Render model cards dynamically inside app.js -->
+        <table class="w-full text-sm data-table hidden">
+          <thead>
+            <tr class="border-b border-white/10">
+              <th class="text-left py-2 px-2 text-gray-300 font-semibold">Model</th>
+              <th class="text-left py-2 px-2 text-gray-300 font-semibold">Primary</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body"></tbody>
+        </table>
+        <div class="text-xs text-slate-500 font-mono text-center py-8">
+          Awaiting validation runs to compute models.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Document Exporter Panel -->
+  <div class="glass-card">
+    <div class="card-header border-b border-white/5 pb-4 mb-4">
+      <h3 class="card-title text-base flex items-center gap-2">
+        <svg class="w-4 h-4 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        Generate AutoML Executive Summary Report
+      </h3>
+      <p class="card-subtitle text-xs">Export markdown and JSON metrics reports of the active training run</p>
+    </div>
+    
+    <div class="space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="form-group">
+          <label class="form-label">Report Title</label>
+          <input type="text" id="report-title" class="form-input font-mono" placeholder="AutoDS-LLM Model Sweep Summary" />
+        </div>
+        <div class="flex items-end">
+          <button class="btn btn-primary w-full justify-center md:w-auto" id="generate-report-button">Generate System Report</button>
+        </div>
+      </div>
+      
+      <!-- Export logs output box -->
+      <div id="report-status" class="hidden p-4 bg-emerald-500/5 border border-emerald-500/25 rounded-lg text-emerald-400 text-xs font-mono space-y-2"></div>
+    </div>
+  </div>
+</div>

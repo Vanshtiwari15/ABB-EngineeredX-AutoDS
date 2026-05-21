@@ -1,0 +1,192 @@
+{
+  "title": "Titanic Survival Prediction Report",
+  "generated_at": 1779351779.779885,
+  "dataset": {
+    "filename": "train.csv",
+    "shape": [
+      891,
+      12
+    ],
+    "columns": [
+      "PassengerId",
+      "Survived",
+      "Pclass",
+      "Name",
+      "Sex",
+      "Age",
+      "SibSp",
+      "Parch",
+      "Ticket",
+      "Fare",
+      "Cabin",
+      "Embarked"
+    ]
+  },
+  "task": {
+    "task_type": "classification",
+    "confidence": 1.0,
+    "reasoning": [
+      "User-provided hint: classification."
+    ],
+    "target": "Survived",
+    "text_column": "Name",
+    "datetime_column": null,
+    "profile": {
+      "n_rows": 891,
+      "n_cols": 12,
+      "columns": [
+        "PassengerId",
+        "Survived",
+        "Pclass",
+        "Name",
+        "Sex",
+        "Age",
+        "SibSp",
+        "Parch",
+        "Ticket",
+        "Fare",
+        "Cabin",
+        "Embarked"
+      ],
+      "dtypes": {
+        "PassengerId": "int64",
+        "Survived": "int64",
+        "Pclass": "int64",
+        "Name": "object",
+        "Sex": "object",
+        "Age": "float64",
+        "SibSp": "int64",
+        "Parch": "int64",
+        "Ticket": "object",
+        "Fare": "float64",
+        "Cabin": "object",
+        "Embarked": "object"
+      },
+      "missing": {
+        "PassengerId": 0,
+        "Survived": 0,
+        "Pclass": 0,
+        "Name": 0,
+        "Sex": 0,
+        "Age": 177,
+        "SibSp": 0,
+        "Parch": 0,
+        "Ticket": 0,
+        "Fare": 0,
+        "Cabin": 687,
+        "Embarked": 2
+      },
+      "numeric_columns": [
+        "PassengerId",
+        "Survived",
+        "Pclass",
+        "Age",
+        "SibSp",
+        "Parch",
+        "Fare"
+      ],
+      "categorical_columns": [
+        "Name",
+        "Sex",
+        "Ticket",
+        "Cabin",
+        "Embarked"
+      ],
+      "datetime_columns": [],
+      "duplicates": 0,
+      "memory_bytes": 322592,
+      "numeric_stats": {
+        "PassengerId": {
+          "min": 1.0,
+          "max": 891.0,
+          "mean": 446.0,
+          "std": 257.20938292890224
+        },
+        "Survived": {
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.3838383838383838,
+          "std": 0.48631931786710086
+        },
+        "Pclass": {
+          "min": 1.0,
+          "max": 3.0,
+          "mean": 2.308641975308642,
+          "std": 0.8356019334795189
+        },
+        "Age": {
+          "min": 0.42,
+          "max": 80.0,
+          "mean": 29.69911764705882,
+          "std": 14.516321150817317
+        },
+        "SibSp": {
+          "min": 0.0,
+          "max": 8.0,
+          "mean": 0.5230078563411896,
+          "std": 1.1021244350892836
+        },
+        "Parch": {
+          "min": 0.0,
+          "max": 6.0,
+          "mean": 0.38159371492704824,
+          "std": 0.8056047612452284
+        },
+        "Fare": {
+          "min": 0.0,
+          "max": 512.3292,
+          "mean": 32.204207968574636,
+          "std": 49.66553444477411
+        }
+      }
+    }
+  },
+  "preparation": {
+    "steps": [
+      "impute_numeric:median",
+      "scale_numeric",
+      "impute_categorical:most_frequent",
+      "one_hot_encode"
+    ],
+    "numeric_features": [
+      "PassengerId",
+      "Pclass",
+      "Age",
+      "SibSp",
+      "Parch",
+      "Fare"
+    ],
+    "categorical_features": [
+      "Sex",
+      "Ticket",
+      "Cabin",
+      "Embarked"
+    ],
+    "text_feature": null,
+    "n_features_out": 839
+  },
+  "selected_models": [
+    "xgb_classifier"
+  ],
+  "trained_models": [
+    "xgb_classifier"
+  ],
+  "evaluation": {
+    "primary_metric": "f1_macro",
+    "higher_is_better": true,
+    "rankings": [
+      "xgb_classifier"
+    ],
+    "best_model": "xgb_classifier",
+    "evaluations": {
+      "xgb_classifier": {
+        "accuracy": 0.7597765363128491,
+        "f1_macro": 0.7394468704512372,
+        "precision_macro": 0.7490896358543417,
+        "recall_macro": 0.7343214756258234,
+        "roc_auc": 0.7790513833992097
+      }
+    }
+  },
+  "best_model": "xgb_classifier"
+}

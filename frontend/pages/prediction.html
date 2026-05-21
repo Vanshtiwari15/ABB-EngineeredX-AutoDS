@@ -1,0 +1,83 @@
+<div class="space-y-6">
+  <!-- Prediction Studio Layout Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Left Column: Input Panel (Takes 2 Columns) -->
+    <div class="lg:col-span-2 space-y-6">
+      <div class="glass-card neon-glow-cyan">
+        <div class="card-header border-b border-white/5 pb-3 mb-3">
+          <h3 class="card-title text-base flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            Prediction Input Context
+          </h3>
+          <p class="card-subtitle text-xs font-mono">Select a saved machine learning pipeline and input raw feature records</p>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Model Selection -->
+          <div class="form-group">
+            <label class="form-label">Trained ML Model</label>
+            <select id="prediction-model" class="form-select font-mono font-semibold text-cyan-400 bg-slate-950/40"></select>
+            <div id="prediction-model-info" class="text-[10px] text-slate-500 font-mono mt-1.5">No models available. Train pipelines first.</div>
+          </div>
+
+          <!-- Textarea Input JSON -->
+          <div class="form-group">
+            <label class="form-label font-mono">Payload Rows (JSON List of Objects)</label>
+            <textarea id="prediction-input" class="form-textarea font-mono text-xs focus:ring-1 focus:ring-cyan-500 bg-slate-950/20" rows="11" placeholder='[{"feature_name": value}]'></textarea>
+          </div>
+
+          <!-- Controls bar -->
+          <div class="flex gap-2 flex-wrap">
+            <button class="btn btn-accent" id="predict-button">Compute Predictions</button>
+            <button class="btn btn-secondary font-mono text-xs" id="prediction-sample-button" type="button">Load Sample JSON</button>
+            <button class="btn btn-secondary font-mono text-xs" id="prediction-clear-button" type="button">Clear Workspace</button>
+            <button class="btn btn-secondary font-mono text-xs" id="prediction-help-button" type="button">JSON Format Help</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Results & Guides (Takes 1 Column) -->
+    <div class="space-y-6">
+      
+      <!-- Prediction Results Display -->
+      <div class="glass-card min-h-[220px]" id="prediction-result-wrapper">
+        <div class="card-header border-b border-white/5 pb-3 mb-3">
+          <h3 class="card-title text-base">Inference Engine Output</h3>
+          <p class="card-subtitle text-xs font-mono">Computed class/regress value streams</p>
+        </div>
+        
+        <div id="prediction-result" class="hidden font-mono text-xs space-y-3 bg-slate-950/20 p-3 rounded-lg border border-white/5 max-h-[300px] overflow-y-auto">
+          <!-- Predictions will render here -->
+        </div>
+        <div id="prediction-empty-state" class="text-xs text-slate-500 font-mono text-center py-16">
+          Awaiting prediction input rows...
+        </div>
+      </div>
+
+      <!-- JSON Format Guide Card -->
+      <div class="glass-card">
+        <div class="card-header border-b border-white/5 pb-3 mb-3">
+          <h3 class="card-title text-base">JSON Format Help</h3>
+          <p class="card-subtitle text-xs font-mono">Required structure for batch predictions</p>
+        </div>
+        <div class="space-y-2">
+          <p class="text-xs text-slate-400 leading-relaxed">
+            The inference engine parses a JSON array where each object contains column names as keys mapped to row feature values:
+          </p>
+          <div class="bg-black/50 border border-white/5 p-3 rounded-md overflow-x-auto">
+            <pre class="text-[10px] text-cyan-400 font-mono leading-normal">[
+  { "age": 28, "income": 55000 },
+  { "age": 42, "income": 72000 }
+]</pre>
+          </div>
+          <p class="text-[10px] text-slate-500 font-mono">
+            Note: Feature headers must match the columns of your trained dataset exactly (case-sensitive).
+          </p>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>

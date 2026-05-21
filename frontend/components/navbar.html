@@ -1,0 +1,35 @@
+<div class="navbar-content">
+  <!-- Dynamic Page Header -->
+  <div class="navbar-left">
+    <h2 id="page-title" class="page-title text-gradient">Dashboard</h2>
+    <p id="page-subtitle" class="page-subtitle">Welcome back to your AutoML studio</p>
+  </div>
+
+  <!-- Global Action Controls -->
+  <div class="navbar-right">
+    <!-- Refresh Button -->
+    <button id="refresh-session" class="btn-icon-sm" title="Refresh Session State">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M23 4v6h-6"></path>
+        <path d="M1 20v-6h6"></path>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36M20.49 15a9 9 0 0 1-14.85 3.36"></path>
+      </svg>
+    </button>
+    
+    <!-- Reset Button -->
+    <button id="reset-session" class="btn-icon-sm hover:!text-red-400 hover:!border-red-500/30" title="Reset Entire Workspace">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <line x1="10" y1="11" x2="10" y2="17"></line>
+        <line x1="14" y1="11" x2="14" y2="17"></line>
+      </svg>
+    </button>
+    
+    <!-- API Indicator Badge -->
+    <div class="api-status select-none">
+      <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse block" id="navbar-api-pulse"></span>
+      <span class="text-[10px] text-slate-400 font-mono tracking-wider">localhost:8000</span>
+    </div>
+  </div>
+</div>
